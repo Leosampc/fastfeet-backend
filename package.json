@@ -5,6 +5,10 @@
   "repository": "https://github.com/Leosampc/fastfeet-backend.git",
   "author": "<leonardosamp11@gmail.com>",
   "license": "MIT",
+  "scripts": {
+      "dev": "nodemon src/server.js",
+      "dev:debug": "nodemon --inspect src/server.js"
+  },
   "dependencies": {
     "bcrypt": "^3.0.8",
     "express": "^4.17.1",
@@ -21,6 +25,7 @@
     "eslint-plugin-prettier": "^3.1.2",
     "nodemon": "^2.0.2",
     "prettier": "^1.19.1",
-    "sequelize-cli": "^5.5.1"
+    "sequelize-cli": "^5.5.1",
+    "sucrase": "^3.12.1"
   }
 }
