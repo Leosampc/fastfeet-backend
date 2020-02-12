@@ -3,21 +3,32 @@ import { promisify } from 'util';
 
 import authConfig from '../../config/auth';
 
-export default async (req, res, next) => {
+const validateHeader = async (req, res) => {
     const authHeader = req.headers.authorization;
-
-    if (!authHeader)
-        return res.status(401).json({ error: 'Token not provided' });
 
     const [, token] = authHeader.split(' ');
 
     try {
-        const decoded = await promisify(jwt.verify)(token, authConfig.secret);
-
-        req.userId = decoded.id;
-
-        return next();
+        return await promisify(jwt.verify)(token, authConfig.secret);
     } catch (error) {
         return res.status(401).json({ error: 'Token invalid' });
     }
 };
+
+const authMiddleware = async (req, res, next) => {
+    const { id } = await validateHeader(req, res);
+
+    req.userId = id;
+
+    return next();
+};
+
+const providerMiddleware = async (req, res, next) => {
+    const { provider } = await validateHeader(req, res);
+
+    return provider
+        ? next()
+        : res.status(401).json({ error: 'Only for admins' });
+};
+
+export default { authMiddleware, providerMiddleware };
